@@ -6,25 +6,25 @@ node()   {
       stage('Build'){
          // Get maven home path and build
          //def mvnHome =  tool name: 'Maven-3.0.5-17', type: 'Apache'   
-         sh "/opt/maven/bin/mvn package -Dmaven.test.skip=true"
+         sudo sh "/opt/maven/bin/mvn package -Dmaven.test.skip=true"
          //sh " mvn package -Dmaven.test.skip=true"
       }       
      
      stage ('Test'){
          //def mvnHome =  tool name: 'Maven-3.0.5-17', type: 'Apache'    
-         sh "/opt/maven/bin/mvn verify; sleep 3"
+         sudo sh "/opt/maven/bin/mvn verify; sleep 3"
          //sh "mvn verify -Dmaven.test.skip=true"
       }
       
      stage('Build Docker Image'){         
-           sh "docker build -t ${dockerImageName} ."
+           sudo sh "docker build -t ${dockerImageName} ."
       }  
    
       stage('Publish Docker Image'){
          withCredentials([string(credentialsId: 'dockerpwd', variable: 'dockerPWD')]) {
-              sh "docker login -u Shabaz21 -p ${dockerPWD}"
+             sudo sh "docker login -u Shabaz21 -p ${dockerPWD}"
          }
-        sh "docker push ${dockerImageName}"
+       sudo sh "docker push ${dockerImageName}"
       }
       
     stage('Run Docker Image'){
